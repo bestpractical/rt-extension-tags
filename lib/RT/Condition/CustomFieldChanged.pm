@@ -15,7 +15,7 @@ sub IsApplicable {
 
     # Should be installed with ApplicableTransTypes of Create,CustomField,
     # so return true for those types.
-    warn "Trans type is: " . $self->TransactionObj->Type;
+
     return 1;
 }
 
