@@ -23,7 +23,9 @@ with that tag.
 =head2 Tag Custom Field
 
 The initdb step installs a Tag custom field by default along with
-the required condition, action, and scrip.
+the required condition, action, and scrip. The custom field is
+global as installed, but you can limit it to specific queues
+by editing the custom field configuration.
 
 If you want to use this functionality with a different custom field,
 create the custom field, then create a new scrip. You can use
@@ -49,6 +51,12 @@ Works with RT 4.0, 4.2, 4.4
 =item C<make install>
 
 May need root permissions
+
+=item C<make initdb>
+
+Only run this the first time you install the module. Creates a global
+Tags custom field and adds the necessary scrip, action, and
+condition.
 
 =item Edit your F</opt/rt4/etc/RT_SiteConfig.pm>
 
