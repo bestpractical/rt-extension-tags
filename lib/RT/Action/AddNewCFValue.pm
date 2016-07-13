@@ -55,12 +55,7 @@ sub Commit {
             ? $txn->NewReferenceObject
             : $self->NewReferenceObject($txn);
 
-        if ( not $cf_value->Id ) {
-            RT::Logger->error( "Unable to load referenced transaction object "
-                    . "for transaction "
-                    . $txn->Id );
-            return 0;
-        }
+        return 0 unless $cf_value and $cf_value->Id;
 
         foreach my $value (@current_values) {
 
