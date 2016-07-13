@@ -50,8 +50,11 @@ sub Commit {
         return 1;
     } else {
 
-        # CF update transaction
-        my $cf_value = $self->NewReferenceObject($txn);
+        # Defer to core's NewReferenceObject if possible
+        my $cf_value = $txn->can("NewReferenceObject")
+            ? $txn->NewReferenceObject
+            : $self->NewReferenceObject($txn);
+
         if ( not $cf_value->Id ) {
             RT::Logger->error( "Unable to load referenced transaction object "
                     . "for transaction "
@@ -71,8 +74,8 @@ sub Commit {
     }
 }
 
-# Lifted from later RT for compatibility with RT 4.0. Can be removed
-# after 4.0 support drops.
+# Lifted from RT 4.2's RT::Transaction, for compatibility with RT
+# 4.0.  Can be removed after 4.0 support drops.
 
 sub NewReferenceObject {
     my $self = shift;
