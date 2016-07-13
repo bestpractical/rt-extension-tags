@@ -1,13 +1,15 @@
-my $link_value_to;
+my $status;
 
 if ( RT::Handle::cmp_version($RT::VERSION, "4.4.0") < 0 ){
     # For pre RT 4.4
-    $link_value_to = '__WebPath__/Search/Results.html?Query=CF.{Tag} = \'__CustomField__\' AND (Status=\'new\' OR Status = \'open\')';
-}
-else{
+    $status = "(Status = 'new' OR Status = 'open')";
+} else {
     # RT 4.4 introduced __Active__
-    $link_value_to = '__WebPath__/Search/Results.html?Query=CF.{Tag} = \'__CustomField__\' AND (Status=\'__Active__\')';
+    $status = "Status = '__Active__'";
 }
+
+my $query = "CF.{Tag} = '__CustomField__' AND $status";
+RT::Interface::Web::EscapeURI(\$query);
 
 @CustomFields = (
     {
@@ -16,7 +18,7 @@ else{
         LookupType  => 'RT::Queue-RT::Ticket',
         Disabled    => 0,
         Description => 'Tags for tickets',
-        LinkValueTo => $link_value_to,
+        LinkValueTo => "__WebPath__/Search/Results.html?Query=$query",
         MaxValues   => '0',
     },
 );
