@@ -20,8 +20,8 @@ action when the action is installed.
 =cut
 
 sub Commit {
-    my $self   = shift;
-    my $txn    = $self->TransactionObj;
+    my $self    = shift;
+    my $txn     = $self->TransactionObj;
     my $cf_name = $self->Argument;
 
     my $cf = $self->TicketObj->LoadCustomFieldByIdentifier($cf_name);
@@ -29,34 +29,38 @@ sub Commit {
 
     my $values_obj = $cf->Values;
     my @current_values;
-    while ( my $cf_value = $values_obj->Next ){
+    while ( my $cf_value = $values_obj->Next ) {
         push @current_values, $cf_value->Name;
     }
 
-    if ( $txn->Type eq 'Create') {
-        # Can get multiple new values from create, so check them all
-        my @ticket_values =
-            split /\n/, $self->TicketObj->CustomFieldValuesAsString($cf_name);
+    if ( $txn->Type eq 'Create' ) {
 
-        foreach my $value ( @ticket_values ){
+        # Can get multiple new values from create, so check them all
+        my @ticket_values = split /\n/,
+            $self->TicketObj->CustomFieldValuesAsString($cf_name);
+
+        foreach my $value (@ticket_values) {
+
             # Already got it
-            next if grep {$value eq $_} @current_values;
+            next if grep { $value eq $_ } @current_values;
 
             # Don't have it, so add it
             $cf->AddValue( Name => $value );
         }
         return 1;
-    }
-    else{
+    } else {
+
         # CF update transaction
         my $cf_value = $self->NewReferenceObject($txn);
-        if ( not $cf_value->Id ){
-            RT::Logger->error("Unable to load referenced transaction object "
-            . "for transaction " . $txn->Id);
+        if ( not $cf_value->Id ) {
+            RT::Logger->error( "Unable to load referenced transaction object "
+                    . "for transaction "
+                    . $txn->Id );
             return 0;
         }
 
-        foreach my $value ( @current_values ){
+        foreach my $value (@current_values) {
+
             # Already have it
             return 1 if $cf_value->Content eq $value;
         }
@@ -71,14 +75,14 @@ sub Commit {
 # after 4.0 support drops.
 
 sub NewReferenceObject {
-    my $self  = shift;
-    my $txn = shift;
-    my $type  = $txn->__Value("ReferenceType");
-    my $id    = $txn->__Value("NewReference");
+    my $self = shift;
+    my $txn  = shift;
+    my $type = $txn->__Value("ReferenceType");
+    my $id   = $txn->__Value("NewReference");
     return unless $type and $id;
 
-    my $object = $type->new($self->CurrentUser);
-    $object->Load( $id );
+    my $object = $type->new( $self->CurrentUser );
+    $object->Load($id);
     return $object;
 }
 
