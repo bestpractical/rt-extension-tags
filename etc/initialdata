@@ -22,29 +22,19 @@ else{
     },
 );
 
-@ScripConditions = (
-    {
-      Name                 => 'On Custom Field Change',                                # loc
-      Description          => 'When a custom field is changed',                 # loc
-      ApplicableTransTypes => 'Create,CustomField',
-      ExecModule           => 'CustomFieldChanged',
-    },
-);
-
 @ScripActions = (
-
     {
        Name        => 'Add New CF Value',
        Description => 'Add new values to the list of available values for this custom field' ,
-       ExecModule => 'AddNewCFValue',
-       Argument   => 'Tag'
+       ExecModule  => 'AddNewCFValue',
+       Argument    => 'Tag'
     },
 );
 
 @Scrips = (
     {
        Description    => 'On Custom Field Change Add New Tag Values',
-       ScripCondition => 'On Custom Field Change',
+       ScripCondition => 'On Transaction',
        ScripAction    => 'Add New CF Value',
        Template       => 'Blank'
     },
