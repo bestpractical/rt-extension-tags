@@ -58,8 +58,6 @@ sub Commit {
 
         foreach my $value ( @current_values ){
             # Already have it
-            warn "Content is: " . $cf_value->Content;
-            warn "Value is: $value";
             return 1 if $cf_value->Content eq $value;
         }
 
