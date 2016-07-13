@@ -5,6 +5,15 @@ use warnings;
 
 use base qw(RT::Action);
 
+sub CustomField {
+    my $self    = shift;
+    my $cf_name = $self->Argument;
+
+    my $cf = $self->TicketObj->LoadCustomFieldByIdentifier($cf_name);
+    RT::Logger->error("Unable to load custom field $cf_name") unless $cf->Id;
+    return $cf;
+}
+
 sub Prepare {
     return 1;
 }
@@ -20,12 +29,9 @@ action when the action is installed.
 =cut
 
 sub Commit {
-    my $self    = shift;
-    my $txn     = $self->TransactionObj;
-    my $cf_name = $self->Argument;
-
-    my $cf = $self->TicketObj->LoadCustomFieldByIdentifier($cf_name);
-    RT::Logger->error("Unable to load custom field $cf_name") unless $cf->Id;
+    my $self = shift;
+    my $txn  = $self->TransactionObj;
+    my $cf   = $self->CustomField;
 
     my $values_obj = $cf->Values;
     my @current_values;
@@ -37,7 +43,7 @@ sub Commit {
 
         # Can get multiple new values from create, so check them all
         my @ticket_values = split /\n/,
-            $self->TicketObj->CustomFieldValuesAsString($cf_name);
+            $self->TicketObj->CustomFieldValuesAsString($cf);
 
         foreach my $value (@ticket_values) {
 
