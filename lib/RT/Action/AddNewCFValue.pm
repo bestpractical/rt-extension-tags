@@ -15,7 +15,13 @@ sub CustomField {
 }
 
 sub Prepare {
-    return 1;
+    my $self = shift;
+    my $txn  = $self->TransactionObj;
+    my $cf   = $self->CustomField;
+
+    return 1 if $txn->Type eq "Create";
+    return 1 if $txn->Type eq "CustomField" and $txn->Field == $cf->id;
+    return 0;
 }
 
 =head2 DESCRIPTION
