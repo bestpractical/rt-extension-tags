@@ -17,6 +17,8 @@ $RT::CustomField::FieldTypes{Tags} = {
     ],
 };
 
+RT->AddJavaScript("tag-it.min.js");
+RT->AddStyleSheets("jquery.tagit.css");
 
 no warnings 'redefine';
 my $old = \&RT::CustomField::AddValueForObject;
