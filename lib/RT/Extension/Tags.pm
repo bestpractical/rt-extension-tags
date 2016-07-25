@@ -4,6 +4,48 @@ package RT::Extension::Tags;
 
 our $VERSION = '0.02';
 
+
+require RT::CustomField;
+
+$RT::CustomField::FieldTypes{Tags} = {
+    sort_order     => 85,
+    selection_type => 1,
+    labels         => [
+        'Enter multiple tags',  # loc
+        'Enter one tag',        # loc
+        'Enter up to [_1] tag', # loc
+    ],
+};
+
+
+no warnings 'redefine';
+my $old = \&RT::CustomField::AddValueForObject;
+*RT::CustomField::AddValueForObject = sub {
+    my $self = shift;
+    my %args = (
+        Content => undef,
+        LargeContent => undef,
+        @_
+    );
+
+    my ($ok, $msg) = $old->($self, @_);
+    return ($ok, $msg) unless $ok;
+
+    return ($ok, $msg) unless $self->Type eq "Tags";
+
+
+    my $value = $args{LargeContent} || $args{Content};
+    my $as_super = RT::CustomField->new( RT->SystemUser );
+    $as_super->Load( $self->id );
+    my $values = $as_super->Values;
+    $values->Limit( FIELD => 'Name', VALUE => $value );
+    return ($ok, $msg) if $values->Count;
+
+    $as_super->AddValue( Name => $value );
+    return ($ok, $msg);
+};
+
+
 =head1 NAME
 
 RT-Extension-Tags - Provides simple tagging using custom fields
@@ -11,30 +53,16 @@ RT-Extension-Tags - Provides simple tagging using custom fields
 =head1 DESCRIPTION
 
 This extension allows you to create tags using custom fields on
-tickets. RT has a custom field type that allows you to select
-multiple values with autocomplete from a list of values. This
-extension allows users to add new values (tags) that will then be
-added to the list of available autocomplete values for that custom
-field.
+tickets.  It adds a new custom field type, "Tags", which allows users
+to add new values (tags) that will then be added to the list of
+available autocomplete values for that custom field.
 
 The created tags become links to a search of all active tickets
 with that tag.
 
 =head2 Tag Custom Field
 
-The initdb step installs a Tag custom field by default along with
-the required condition, action, and scrip. The custom field is
-global as installed, but you can limit it to specific queues
-by editing the custom field configuration.
-
-If you want to use this functionality with a different custom field,
-create the custom field, then create a new scrip. You can use
-the provided "On Custom Field Change" condition as is. Then
-create a new action in the RT database using the same values as the
-provided "Add New CF Value" but change the Argument to the name of your
-new custom field. You can add this with a short initial data file,
-directly in the database, or using the helpful extension
-L<RT::Extension::AdminConditionsAndActions>.
+The initdb step installs an example global Tag custom field.
 
 =head1 RT VERSION
 
@@ -54,9 +82,7 @@ May need root permissions
 
 =item C<make initdb>
 
-Only run this the first time you install the module. Creates a global
-Tags custom field and adds the necessary scrip, action, and
-condition.
+This optional step installs an example global C<Tag> custom field.
 
 =item Edit your F</opt/rt4/etc/RT_SiteConfig.pm>
 

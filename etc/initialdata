@@ -1,43 +1,10 @@
-my $status;
-
-if ( RT::Handle::cmp_version($RT::VERSION, "4.4.0") < 0 ){
-    # For pre RT 4.4
-    $status = "(Status = 'new' OR Status = 'open')";
-} else {
-    # RT 4.4 introduced __Active__
-    $status = "Status = '__Active__'";
-}
-
-my $query = "CF.{Tag} = '__CustomField__' AND $status";
-RT::Interface::Web::EscapeURI(\$query);
-
 @CustomFields = (
     {
         Name        => 'Tag',
-        Type        => 'AutocompleteMultiple',
+        Type        => 'TagsMultiple',
         LookupType  => 'RT::Queue-RT::Ticket',
         Disabled    => 0,
         Description => 'Tags for tickets',
-        LinkValueTo => "__WebPath__/Search/Results.html?Query=$query",
         MaxValues   => '0',
     },
 );
-
-@ScripActions = (
-    {
-       Name        => 'Add New CF Value',
-       Description => 'Add new values to the list of available values for this custom field' ,
-       ExecModule  => 'AddNewCFValue',
-       Argument    => 'Tag'
-    },
-);
-
-@Scrips = (
-    {
-       Description    => 'On Custom Field Change Add New Tag Values',
-       ScripCondition => 'On Transaction',
-       ScripAction    => 'Add New CF Value',
-       Template       => 'Blank'
-    },
-);
-
