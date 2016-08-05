@@ -104,6 +104,27 @@ or add C<RT::Extension::Tags> to your existing C<@Plugins> line.
 
 =back
 
+=head2 UPGRADING
+
+If you are upgrading from version 0.01 or 0.02, note that the custom field
+type was changed from a default RT "multiple values with autocompletion" to
+a dedicated tag custom field type. To upgrade:
+
+=over
+
+=item * Change your Tag custom field to use the new tag custom field type
+
+You can either edit your existing custom field and change the Type to "Enter
+multiple tags" or run the initdb step and copy your values to the new Tag
+custom field automatically created.
+
+=item * Disable the scrip "On Custom Field Change Add New Tag Values"
+
+This scrip is no longer needed with the new tag custom field type,
+so you can disable or delete it.
+
+=back
+
 =head1 AUTHOR
 
 Best Practical Solutions, LLC E<lt>modules@bestpractical.comE<gt>
