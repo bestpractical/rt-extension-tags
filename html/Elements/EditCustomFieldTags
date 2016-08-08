@@ -1,1 +1,38 @@
-<& /Elements/EditCustomFieldAutocomplete, %ARGS &>
+<textarea name="<% $name %>-Values" id="<% $name %>-Values" class="CF-<%$CustomField->id%>-Edit"><% $Default || '' %></textarea>
+<script type="text/javascript">
+var id = <% "$name-Values" |n,j%>;
+id = id.replace(/:/g,'\\:');
+jQuery('#'+id).tagit({
+  autocomplete: {
+    source: <%RT->Config->Get('WebPath') |n,j%>+"/Helpers/Autocomplete/CustomFieldValues?"+<% $Context |n,j %>+<% "$name-Values" |n,u,j%>,
+  },
+  tagLimit: <% $CustomField->MaxValues+0 || "null" |n %>,
+  singleFieldDelimiter: "\n"
+});
+</script>
+<%INIT>
+my $name = $NamePrefix . $CustomField->Id;
+if ( $Default && !$Multiple ) {
+    $Default =~ s/\s*\r*\n\s*/ /g;
+}
+if ( $Multiple and $Values ) {
+    $Default = '';
+    while (my $value = $Values->Next ) {
+        $Default .= $value->Content ."\n";
+    }
+}
+my $Context = "";
+if ($CustomField->ContextObject) {
+    $Context .= "ContextId="  . $CustomField->ContextObject->Id  . "&";
+    $Context .= "ContextType=". ref($CustomField->ContextObject) . "&";
+}
+</%INIT>
+<%ARGS>
+$CustomField => undef
+$NamePrefix  => undef
+$Default     => undef
+$Values      => undef
+$Multiple    => undef
+$Rows        => undef
+$Cols        => undef
+</%ARGS>
