@@ -1,17 +1,18 @@
-<textarea name="<% $name %>-Values" id="<% $name %>-Values" class="CF-<%$CustomField->id%>-Edit"><% $Default || '' %></textarea>
+<textarea name="<% $name %>" id="<% $name %>" class="CF-<%$CustomField->id%>-Edit"><% $Default || '' %></textarea>
 <script type="text/javascript">
-var id = <% "$name-Values" |n,j%>;
+var id = <% "$name" |n,j%>;
 id = id.replace(/:/g,'\\:');
 jQuery('#'+id).tagit({
   autocomplete: {
-    source: <%RT->Config->Get('WebPath') |n,j%>+"/Helpers/Autocomplete/CustomFieldValues?"+<% $Context |n,j %>+<% "$name-Values" |n,u,j%>,
+    source: <%RT->Config->Get('WebPath') |n,j%>+"/Helpers/Autocomplete/CustomFieldValues?"+<% $Context |n,j %>+<% "$name" |n,u,j%>,
   },
   tagLimit: <% $CustomField->MaxValues+0 || "null" |n %>,
   singleFieldDelimiter: "\n"
 });
 </script>
 <%INIT>
-my $name = $NamePrefix . $CustomField->Id;
+my $name = $Name || $NamePrefix . $CustomField->Id . '-Values';
+
 if ( $Default && !$Multiple ) {
     $Default =~ s/\s*\r*\n\s*/ /g;
 }
@@ -35,4 +36,5 @@ $Values      => undef
 $Multiple    => undef
 $Rows        => undef
 $Cols        => undef
+$Name        => undef
 </%ARGS>
