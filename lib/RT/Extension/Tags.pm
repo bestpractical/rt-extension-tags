@@ -82,10 +82,6 @@ Works with RT 4.0, 4.2, 4.4
 
 May need root permissions
 
-=item C<make initdb>
-
-This optional step installs an example global C<Tag> custom field.
-
 =item Edit your F</opt/rt4/etc/RT_SiteConfig.pm>
 
 If you are using RT 4.2 or greater, add this line:
@@ -97,6 +93,10 @@ For RT 4.0, add this line:
     Set(@Plugins, qw(RT::Extension::Tags));
 
 or add C<RT::Extension::Tags> to your existing C<@Plugins> line.
+
+=item C<make initdb>
+
+This optional step installs an example global C<Tag> custom field.
 
 =item Clear your mason cache
 

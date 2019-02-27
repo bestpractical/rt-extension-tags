@@ -22,9 +22,6 @@ INSTALLATION
     make install
         May need root permissions
 
-    make initdb
-        This optional step installs an example global Tag custom field.
-
     Edit your /opt/rt4/etc/RT_SiteConfig.pm
         If you are using RT 4.2 or greater, add this line:
 
@@ -35,6 +32,9 @@ INSTALLATION
             Set(@Plugins, qw(RT::Extension::Tags));
 
         or add RT::Extension::Tags to your existing @Plugins line.
+
+    make initdb
+        This optional step installs an example global Tag custom field.
 
     Clear your mason cache
             rm -rf /opt/rt4/var/mason_data/obj
