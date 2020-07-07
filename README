@@ -14,7 +14,7 @@ DESCRIPTION
     The initdb step installs an example global Tag custom field.
 
 RT VERSION
-    Works with RT 4.0, 4.2, 4.4
+    Works with RT 4.2, 4.4, 5.0
 
 INSTALLATION
     perl Makefile.PL

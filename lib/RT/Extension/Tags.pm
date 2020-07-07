@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package RT::Extension::Tags;
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 
 require RT::CustomField;
@@ -68,7 +68,7 @@ The initdb step installs an example global Tag custom field.
 
 =head1 RT VERSION
 
-Works with RT 4.0, 4.2, 4.4
+Works with RT 4.2, 4.4, 5.0
 
 =head1 INSTALLATION
 
