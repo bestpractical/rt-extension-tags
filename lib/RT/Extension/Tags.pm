@@ -65,7 +65,7 @@ The initdb step installs an example global Tag custom field.
 
 =head1 RT VERSION
 
-Works with RT 4.0, 4.2, 4.4, 5.0
+Works with RT 6.0. For RT 5.0 use the latest 0.* version.
 
 =head1 INSTALLATION
 
@@ -79,17 +79,11 @@ Works with RT 4.0, 4.2, 4.4, 5.0
 
 May need root permissions
 
-=item Edit your F</opt/rt5/etc/RT_SiteConfig.pm>
+=item Edit your F</opt/rt6/etc/RT_SiteConfig.pm>
 
-If you are using RT 4.2 or greater, add this line:
+Add this line to your F<RT_SiteConfig.pm> file:
 
     Plugin('RT::Extension::Tags');
-
-For RT 4.0, add this line:
-
-    Set(@Plugins, qw(RT::Extension::Tags));
-
-or add C<RT::Extension::Tags> to your existing C<@Plugins> line.
 
 =item C<make initdb>
 
@@ -97,7 +91,7 @@ This optional step installs an example global C<Tag> custom field.
 
 =item Clear your mason cache
 
-    rm -rf /opt/rt5/var/mason_data/obj
+    rm -rf /opt/rt6/var/mason_data/obj
 
 =item Restart your webserver
 
@@ -140,7 +134,7 @@ or via the web at
 
 =head1 LICENSE AND COPYRIGHT
 
-This software is Copyright (c) 2016-2020 by Best Practical Solutions, LLC
+This software is Copyright (c) 2016-2025 by Best Practical Solutions, LLC
 
 This is free software, licensed under:
 
