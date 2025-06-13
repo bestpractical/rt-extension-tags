@@ -6,6 +6,7 @@ our $VERSION = '0.05';
 
 
 require RT::CustomField;
+require RT::Interface::Web;
 
 $RT::CustomField::FieldTypes{Tags} = {
     sort_order     => 85,
@@ -18,7 +19,7 @@ $RT::CustomField::FieldTypes{Tags} = {
 };
 
 no warnings 'redefine';
-my $old = \&RT::CustomField::AddValueForObject;
+my $old_avfo = \&RT::CustomField::AddValueForObject;
 *RT::CustomField::AddValueForObject = sub {
     my $self = shift;
     my %args = (
@@ -27,7 +28,7 @@ my $old = \&RT::CustomField::AddValueForObject;
         @_
     );
 
-    my ($ok, $msg) = $old->($self, @_);
+    my ($ok, $msg) = $old_avfo->($self, @_);
     return ($ok, $msg) unless $ok;
 
     return ($ok, $msg) unless $self->Type eq "Tags";
@@ -44,6 +45,21 @@ my $old = \&RT::CustomField::AddValueForObject;
     return ($ok, $msg);
 };
 
+my $old_nocfv = \&HTML::Mason::Commands::_NormalizeObjectCustomFieldValue;
+*HTML::Mason::Commands::_NormalizeObjectCustomFieldValue = sub {
+    my %args = @_;
+    my $cf_type = $args{CustomField}->Type;
+
+    # if this is a Tags custom field replace ',  ' with newline
+    # tomselect uses ',  ' as a delimiter but _NormalizeObjectCustomFieldValue
+    # expects newline as a delimiter for non autocomplete custom fields
+    if ( ( $cf_type eq 'Tags' ) && !( ref( $args{Value} ) eq 'ARRAY' ) ) {
+        $args{Value} =~ s/,  /\n/g
+            if defined $args{Value};
+    }
+
+    return $old_nocfv->(%args);
+};
 
 =head1 NAME
 
