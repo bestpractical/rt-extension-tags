@@ -2,8 +2,7 @@ use strict;
 use warnings;
 package RT::Extension::Tags;
 
-our $VERSION = '0.05';
-
+our $VERSION = '1.00';
 
 require RT::CustomField;
 require RT::Interface::Web;
