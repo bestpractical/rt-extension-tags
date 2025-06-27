@@ -95,6 +95,12 @@ Works with RT 6.0. For RT 5.0 use the latest 0.* version.
 
 May need root permissions
 
+=item Patch RT
+
+If you are running on RT 6.0.0, apply the included patch:
+
+    patch -p1 -d /opt/rt6 < patches/0001-Split-multiple-tomselect-initial-value-on-delimiter.patch
+
 =item Edit your F</opt/rt6/etc/RT_SiteConfig.pm>
 
 Add this line to your F<RT_SiteConfig.pm> file:
