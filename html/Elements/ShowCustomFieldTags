@@ -7,6 +7,7 @@ my $status = "Status = '__Active__'";
 
 my $cf = $Object->CustomFieldObj;
 my $cf_id = $cf->id;
+my $class = $cf->CollectionClassFromLookupType($cf->ObjectTypeFromLookupType);
 my $query_value = $Object->LargeContent || $Object->Content;
 $query_value =~ s/(['\\])/\\$1/g;
 my $query = "CF.{$cf_id} = '$query_value' AND $status";
@@ -14,7 +15,7 @@ RT::Interface::Web::EscapeURI(\$query);
 
 </%init>
 % if (not $cf->LinkValueTo) {
-<a href="<% RT->Config->Get('WebPath') %>/Search/Results.html?Query=<% $query %>">
+<a href="<% RT->Config->Get('WebPath') %>/Search/Results.html?Class=<% $class %>&Query=<% $query %>">
 % }
 <%$content|n%>
 % if (not $cf->LinkValueTo) {
